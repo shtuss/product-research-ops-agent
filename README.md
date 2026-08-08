@@ -68,7 +68,7 @@ A structured 5-part audit was run before shipping: execution log review, a 6-cas
 
 ## Links
 
-- Demo video: _add link_
+- Demo video: [Watch the 3-minute demo](https://youtu.be/9Fphm6xkvBA)
 - Live dashboard: _add link_
 
 ---
