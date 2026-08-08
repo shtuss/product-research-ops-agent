@@ -1,0 +1,483 @@
+{
+  "name": "WF-03 Interview Intake",
+  "nodes": [
+    {
+      "parameters": {
+        "formId": "7RzoGP"
+      },
+      "type": "n8n-nodes-tallyforms.tallyTrigger",
+      "typeVersion": 2,
+      "position": [
+        0,
+        0
+      ],
+      "id": "7845aca3-1fdb-4436-b972-55389499060d",
+      "name": "01 — Tally Interview Trigger",
+      "webhookId": "554ca0ec-bccd-428d-9246-6da3adb15918",
+      "credentials": {
+        "tallyApi": {
+          "id": "ze6qqbBeXVvfmt8p",
+          "name": "Tally account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "fc8e0572-4391-4ebc-a7a1-22f932daa76a",
+              "name": "project_id",
+              "value": "={{ $json.question_v4Qdx4.value }}",
+              "type": "string"
+            },
+            {
+              "id": "1dbcd93b-5f58-49da-b2b1-8ca50cdf922b",
+              "name": "participant_label",
+              "value": "={{ $json.question_KLqaBD.value }}",
+              "type": "string"
+            },
+            {
+              "id": "5a6a32b1-f782-4025-9a15-b17bf5f25f69",
+              "name": "interviewer_name",
+              "value": "={{ $json.question_1M1p2b.value }}",
+              "type": "string"
+            },
+            {
+              "id": "5bb7451b-d552-4da9-b867-bc770730db5e",
+              "name": "interview_transcript",
+              "value": "={{ $json.question_ML97d8.value }}",
+              "type": "string"
+            },
+            {
+              "id": "8e538b0f-a2e3-4f18-ab71-7553c19e18b7",
+              "name": "interview_status",
+              "value": "received",
+              "type": "string"
+            },
+            {
+              "id": "48182ad3-a1df-4ffa-99b4-cfcc28d89814",
+              "name": "submitted_at",
+              "value": "={{ $now.toISO() }}",
+              "type": "string"
+            },
+            {
+              "id": "2c94254e-6a7b-4be1-af6a-92e5361f4ee3",
+              "name": "interview_id",
+              "value": "={{ $json.project_id + '-int-' + $now.toMillis() }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        208,
+        0
+      ],
+      "id": "60087be6-1823-4991-acdc-c6cbcab4b5b1",
+      "name": "02 — Normalize Interview Input"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "T8uqZynKnUpRlBPm",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/T8uqZynKnUpRlBPm",
+          "cachedResultName": "WF-04 Interview Analysis"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "submitted_at": "={{ $('02 — Normalize Interview Input').item.json.submitted_at }}",
+            "transcript_raw": "={{ $('02 — Normalize Interview Input').item.json.interview_transcript }}",
+            "participant_label": "={{ $('02 — Normalize Interview Input').item.json.participant_label }}",
+            "project_id": "={{ $json.project_id }}",
+            "interview_id": "={{ $('02 — Normalize Interview Input').first().json.interview_id }}",
+            "research_goal": "={{ $('03 — Get Project').item.json.research_goal }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "interview_id",
+              "displayName": "interview_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "project_id",
+              "displayName": "project_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "participant_label",
+              "displayName": "participant_label",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "research_goal",
+              "displayName": "research_goal",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "transcript_raw",
+              "displayName": "transcript_raw",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "submitted_at",
+              "displayName": "submitted_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "mode": "each",
+        "options": {
+          "waitForSubWorkflow": true
+        }
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.3,
+      "position": [
+        832,
+        0
+      ],
+      "id": "2ac512b9-66b8-4d09-8886-635b55a2914f",
+      "name": "03 — Run Interview Analysis"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "172yBlSGQ4OqPQJkEWEpmSuXBOPlu669AYgB4kBRk7pU",
+          "mode": "list",
+          "cachedResultName": "Interview-to-Insights Pipeline",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/172yBlSGQ4OqPQJkEWEpmSuXBOPlu669AYgB4kBRk7pU/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "projects",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/172yBlSGQ4OqPQJkEWEpmSuXBOPlu669AYgB4kBRk7pU/edit#gid=0"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "project_id",
+              "lookupValue": "={{ $json.project_id }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        416,
+        0
+      ],
+      "id": "e62b22e8-906e-4d31-b77f-69600b0e1a02",
+      "name": "03 — Get Project",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "KaXnEFiUPllLVm7z",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "172yBlSGQ4OqPQJkEWEpmSuXBOPlu669AYgB4kBRk7pU",
+          "mode": "list",
+          "cachedResultName": "Interview-to-Insights Pipeline",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/172yBlSGQ4OqPQJkEWEpmSuXBOPlu669AYgB4kBRk7pU/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1660084804,
+          "mode": "list",
+          "cachedResultName": "interviews",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/172yBlSGQ4OqPQJkEWEpmSuXBOPlu669AYgB4kBRk7pU/edit#gid=1660084804"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "interview_id": "={{ $('02 — Normalize Interview Input').first().json.interview_id }}",
+            "project_id": "={{ $('02 — Normalize Interview Input').first().json.project_id }}",
+            "participant_label": "={{ $('02 — Normalize Interview Input').first().json.participant_label }}",
+            "interviewer_name": "={{ $('02 — Normalize Interview Input').first().json.interviewer_name }}",
+            "transcript_raw": "={{ $('02 — Normalize Interview Input').first().json.interview_transcript }}",
+            "analysis_status": "received",
+            "submitted_at": "={{ $('02 — Normalize Interview Input').first().json.submitted_at }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "interview_id",
+              "displayName": "interview_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "project_id",
+              "displayName": "project_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "tally_submission_id",
+              "displayName": "tally_submission_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "participant_label",
+              "displayName": "participant_label",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "interviewer_name",
+              "displayName": "interviewer_name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "transcript_raw",
+              "displayName": "transcript_raw",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "transcript_clean",
+              "displayName": "transcript_clean",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "content_hash",
+              "displayName": "content_hash",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "submitted_at",
+              "displayName": "submitted_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "analysis_status",
+              "displayName": "analysis_status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "analysis_version",
+              "displayName": "analysis_version",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "finding_count",
+              "displayName": "finding_count",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "cleaning_warnings_json",
+              "displayName": "cleaning_warnings_json",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "processed_at",
+              "displayName": "processed_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "error_message",
+              "displayName": "error_message",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "expected_interview_count",
+              "displayName": "expected_interview_count",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "interview_summary",
+              "displayName": "interview_summary",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        624,
+        0
+      ],
+      "id": "076e1696-c40d-46a4-b259-c1f7b18b4b80",
+      "name": "04 — Save Interview",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "KaXnEFiUPllLVm7z",
+          "name": "Google Sheets account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "01 — Tally Interview Trigger": {
+      "main": [
+        [
+          {
+            "node": "02 — Normalize Interview Input",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "02 — Normalize Interview Input": {
+      "main": [
+        [
+          {
+            "node": "03 — Get Project",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "03 — Get Project": {
+      "main": [
+        [
+          {
+            "node": "04 — Save Interview",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "04 — Save Interview": {
+      "main": [
+        [
+          {
+            "node": "03 — Run Interview Analysis",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "ea946200-188d-4956-a63e-730b7d3d244a",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "d4d45fe6ce8c84f8055fdf8cee8b9f35899dc09f547385770f86d0df7ceeb129"
+  },
+  "nodeGroups": [],
+  "id": "9HWjsryPliIGiw0G",
+  "tags": []
+}

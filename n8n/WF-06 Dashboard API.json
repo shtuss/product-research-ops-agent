@@ -1,0 +1,429 @@
+{
+  "name": "WF-06 Dashboard API",
+  "nodes": [
+    {
+      "parameters": {
+        "path": "dashboard-data",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "16ff4369-75be-44ed-a06d-db4d1ac91e4c",
+      "name": "01 — Dashboard Webhook",
+      "webhookId": "b21de979-9ec4-4611-b02f-af5b28b2a804"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "4e5daaff-1f7a-4620-b7b3-c6a23136b151",
+              "name": "project_id",
+              "value": "={{ $json.query.project_id }}",
+              "type": "string"
+            },
+            {
+              "id": "f9cd36b2-1841-414a-92af-f6fe1ca54e41",
+              "name": "requested_at",
+              "value": "={{ $now.toISO() }}",
+              "type": "string"
+            },
+            {
+              "id": "25af8a6e-95ae-4ab5-868f-795d95cd0693",
+              "name": "",
+              "value": "",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        208,
+        0
+      ],
+      "id": "88f8ae6f-517c-4bba-9246-62219d98382e",
+      "name": "02 — Normalize Request"
+    },
+    {
+      "parameters": {
+        "options": {
+          "responseCode": 200,
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "Access-Control-Allow-Origin",
+                "value": "*"
+              },
+              {
+                "name": "Content-Type",
+                "value": "application/json"
+              }
+            ]
+          }
+        }
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        1664,
+        0
+      ],
+      "id": "585d97e2-b7d6-4b0f-8550-c6e3c957d83c",
+      "name": "09 — Respond to Dashboard"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "172yBlSGQ4OqPQJkEWEpmSuXBOPlu669AYgB4kBRk7pU",
+          "mode": "list",
+          "cachedResultName": "Interview-to-Insights Pipeline",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/172yBlSGQ4OqPQJkEWEpmSuXBOPlu669AYgB4kBRk7pU/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "projects",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/172yBlSGQ4OqPQJkEWEpmSuXBOPlu669AYgB4kBRk7pU/edit#gid=0"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "project_id",
+              "lookupValue": "={{ $('02 — Normalize Request').first().json.project_id }}"
+            }
+          ]
+        },
+        "options": {
+          "returnFirstMatch": true
+        }
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        400,
+        0
+      ],
+      "id": "11e3bb96-e338-4aad-885d-0d03e8df6b81",
+      "name": "03 — Get Project",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "KaXnEFiUPllLVm7z",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "172yBlSGQ4OqPQJkEWEpmSuXBOPlu669AYgB4kBRk7pU",
+          "mode": "list",
+          "cachedResultName": "Interview-to-Insights Pipeline",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/172yBlSGQ4OqPQJkEWEpmSuXBOPlu669AYgB4kBRk7pU/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 558485558,
+          "mode": "list",
+          "cachedResultName": "findings",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/172yBlSGQ4OqPQJkEWEpmSuXBOPlu669AYgB4kBRk7pU/edit#gid=558485558"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "project_id",
+              "lookupValue": "={{ $('02 — Normalize Request').first().json.project_id }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        592,
+        0
+      ],
+      "id": "2513254f-afd9-422b-8d54-a950d5e8ab4c",
+      "name": "04 — Get Interview Findings",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "KaXnEFiUPllLVm7z",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "aggregate": "aggregateAllItemData",
+        "destinationFieldName": "interview_findings",
+        "include": "specifiedFields",
+        "fieldsToInclude": "finding_id, interview_id, finding_type, theme_key, finding_text, supporting_quote, quote_speaker, quote_context, confidence",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [
+        784,
+        0
+      ],
+      "id": "510e5783-a68d-449d-a7c3-2d83911ebd18",
+      "name": "05 — Aggregate Interview Findings"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "172yBlSGQ4OqPQJkEWEpmSuXBOPlu669AYgB4kBRk7pU",
+          "mode": "list",
+          "cachedResultName": "Interview-to-Insights Pipeline",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/172yBlSGQ4OqPQJkEWEpmSuXBOPlu669AYgB4kBRk7pU/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 63668664,
+          "mode": "list",
+          "cachedResultName": "competitive_synthesis",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/172yBlSGQ4OqPQJkEWEpmSuXBOPlu669AYgB4kBRk7pU/edit#gid=63668664"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "project_id",
+              "lookupValue": "={{ $('02 — Normalize Request').first().json.project_id }}"
+            }
+          ]
+        },
+        "options": {
+          "returnFirstMatch": true
+        }
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        976,
+        0
+      ],
+      "id": "a48b1b0e-6b9d-460d-a7e2-52ffad6b4a51",
+      "name": "06 — Get Competitive Synthesis",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "KaXnEFiUPllLVm7z",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "172yBlSGQ4OqPQJkEWEpmSuXBOPlu669AYgB4kBRk7pU",
+          "mode": "list",
+          "cachedResultName": "Interview-to-Insights Pipeline",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/172yBlSGQ4OqPQJkEWEpmSuXBOPlu669AYgB4kBRk7pU/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 733137531,
+          "mode": "list",
+          "cachedResultName": "research_summaries",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/172yBlSGQ4OqPQJkEWEpmSuXBOPlu669AYgB4kBRk7pU/edit#gid=733137531"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "project_id",
+              "lookupValue": "={{ $('02 — Normalize Request').first().json.project_id }}"
+            }
+          ]
+        },
+        "options": {
+          "returnFirstMatch": true
+        }
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        1184,
+        0
+      ],
+      "id": "35e8b1fc-4d8f-4fe7-963b-85cbf1de2437",
+      "name": "07 — Get Final Synthesis",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "KaXnEFiUPllLVm7z",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "f44cfb85-9734-4527-8715-e11362a4e8dc",
+              "name": "project",
+              "value": "={{ {   project_id: $('03 — Get Project').first().json.project_id,   project_name: $('03 — Get Project').first().json.project_name,   research_goal: $('03 — Get Project').first().json.research_goal,   requested_by: $('07 — Get Final Synthesis').first().json.requested_by,   generated_at: $('07 — Get Final Synthesis').first().json.generated_at } }}",
+              "type": "object"
+            },
+            {
+              "id": "85935185-79bd-438d-bb12-2be1a98594dd",
+              "name": "metrics",
+              "value": "={{ {   interviews_analyzed: [     ...new Set(       $('05 — Aggregate Interview Findings').first().json.interview_findings         .map(item => item.interview_id)         .filter(Boolean)     )   ].length,    research_findings:     $('05 — Aggregate Interview Findings').first().json.interview_findings.length,    competitors_analyzed:     JSON.parse(       $('06 — Get Competitive Synthesis').first().json.competitor_names_json || '[]'     ).length } }}",
+              "type": "object"
+            },
+            {
+              "id": "e8488593-7168-4bb5-a2c9-348b58538c1b",
+              "name": "synthesis",
+              "value": "={{ {   executive_summary:     $('07 — Get Final Synthesis').first().json.executive_summary,    confidence:     Number($('07 — Get Final Synthesis').first().json.confidence || 0),    approval_status:     $('07 — Get Final Synthesis').first().json.approval_status || 'pending',    key_findings:     JSON.parse(       $('07 — Get Final Synthesis').first().json.key_findings_json || '[]'     ),    product_opportunities:     JSON.parse(       $('07 — Get Final Synthesis').first().json.product_opportunities_json || '[]'     ),    roadmap:     JSON.parse(       $('07 — Get Final Synthesis').first().json.roadmap_json || '[]'     ),    design_recommendations:     JSON.parse(       $('07 — Get Final Synthesis').first().json.design_recommendations_json || '[]'     ),    research_limitations:     JSON.parse(       $('07 — Get Final Synthesis').first().json.research_limitations_json || '[]'     ) } }}",
+              "type": "object"
+            },
+            {
+              "id": "1455f375-0880-4d22-8f07-2fe8f3e1d802",
+              "name": "interview_findings",
+              "value": "={{ $('05 — Aggregate Interview Findings').first().json.interview_findings.map(item => ({   finding_type: item.finding_type,   theme_key: item.theme_key,   finding_text: item.finding_text,   supporting_quote: item.supporting_quote,   confidence: Number(item.confidence || 0) })) }}",
+              "type": "array"
+            },
+            {
+              "id": "1f3c9631-5ab1-4cea-bc94-cff02aea956c",
+              "name": "competitive_synthesis",
+              "value": "={{ {   competitor_names:     JSON.parse(       $('06 — Get Competitive Synthesis').first().json.competitor_names_json || '[]'     ),    competitor_comparison_summary:     $('06 — Get Competitive Synthesis').first().json.competitor_comparison_summary,    best_practices:     JSON.parse(       $('06 — Get Competitive Synthesis').first().json.best_practices_json || '[]'     ),    common_weaknesses:     JSON.parse(       $('06 — Get Competitive Synthesis').first().json.common_weaknesses_json || '[]'     ) } }}",
+              "type": "object"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1424,
+        0
+      ],
+      "id": "b93d2938-047b-4f63-a393-ee31554a9cfc",
+      "name": "08 — Build Dashboard Response"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "01 — Dashboard Webhook": {
+      "main": [
+        [
+          {
+            "node": "02 — Normalize Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "02 — Normalize Request": {
+      "main": [
+        [
+          {
+            "node": "03 — Get Project",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "03 — Get Project": {
+      "main": [
+        [
+          {
+            "node": "04 — Get Interview Findings",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "04 — Get Interview Findings": {
+      "main": [
+        [
+          {
+            "node": "05 — Aggregate Interview Findings",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "05 — Aggregate Interview Findings": {
+      "main": [
+        [
+          {
+            "node": "06 — Get Competitive Synthesis",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "06 — Get Competitive Synthesis": {
+      "main": [
+        [
+          {
+            "node": "07 — Get Final Synthesis",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "07 — Get Final Synthesis": {
+      "main": [
+        [
+          {
+            "node": "08 — Build Dashboard Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "08 — Build Dashboard Response": {
+      "main": [
+        [
+          {
+            "node": "09 — Respond to Dashboard",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "1ace5d6f-ae21-4091-a471-7f866d484536",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "d4d45fe6ce8c84f8055fdf8cee8b9f35899dc09f547385770f86d0df7ceeb129"
+  },
+  "nodeGroups": [],
+  "id": "vlrYrP71deNRO265",
+  "tags": [
+    {
+      "updatedAt": "2026-07-13T14:38:45.889Z",
+      "createdAt": "2026-07-13T14:38:45.889Z",
+      "id": "XsKY5DuuIt3CqZKz",
+      "name": "final project"
+    }
+  ]
+}

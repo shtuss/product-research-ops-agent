@@ -1,0 +1,388 @@
+{
+  "name": "WF-01 Project Setup & Competitive Analysis",
+  "nodes": [
+    {
+      "parameters": {
+        "formId": "XxkNP4"
+      },
+      "type": "n8n-nodes-tallyforms.tallyTrigger",
+      "typeVersion": 2,
+      "position": [
+        -32,
+        0
+      ],
+      "id": "a3af3336-5bab-433a-a473-c0854b948050",
+      "name": "01 — Tally Trigger",
+      "webhookId": "a4be6655-7b87-4bc3-8808-b9c1da41c747",
+      "credentials": {
+        "tallyApi": {
+          "id": "ze6qqbBeXVvfmt8p",
+          "name": "Tally account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "9a7f8347-56f8-403a-a678-7fef31ed759c",
+              "name": "tally_submission_id",
+              "value": "={{ $json.id }}",
+              "type": "string"
+            },
+            {
+              "id": "fd37b17e-b3de-4834-8533-583733451eed",
+              "name": "submitted_at",
+              "value": "={{ $json.createdAt }}",
+              "type": "string"
+            },
+            {
+              "id": "fb2f744e-ab36-46ae-bb20-9204409014c8",
+              "name": "project_id",
+              "value": "={{ $json.question_brVM4g.value }}",
+              "type": "string"
+            },
+            {
+              "id": "458395cc-762f-4c86-81a6-2ff9b9342f52",
+              "name": "project_name",
+              "value": "={{ $json.question_ADPYb0.value }}",
+              "type": "string"
+            },
+            {
+              "id": "b1fe6a04-e248-4cde-99b1-119d0f93eb34",
+              "name": "research_goal",
+              "value": "={{ $json.question_BD4Yb5.value }}",
+              "type": "string"
+            },
+            {
+              "id": "207156bf-5afd-4877-be29-49e4a30fd31e",
+              "name": "product_description",
+              "value": "={{ $json.question_MYKZNg.value }}",
+              "type": "string"
+            },
+            {
+              "id": "71efb727-0f9c-446f-9e6a-7ce79a3c9172",
+              "name": "project_status",
+              "value": "competitive_analysis_pending",
+              "type": "string"
+            },
+            {
+              "id": "d3b2f90c-65ff-4ffc-996d-02edb0aab923",
+              "name": "created_at",
+              "value": "={{ $json.createdAt }}",
+              "type": "string"
+            },
+            {
+              "id": "73e0e2b3-53a7-4c3d-ad35-402c39e7aa4c",
+              "name": "updated_at",
+              "value": "={{ $now.toISO() }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        208,
+        0
+      ],
+      "id": "1d95102d-72c0-4481-ad74-4be637acff05",
+      "name": "02 — Normalize Input"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "172yBlSGQ4OqPQJkEWEpmSuXBOPlu669AYgB4kBRk7pU",
+          "mode": "list",
+          "cachedResultName": "Interview-to-Insights Pipeline",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/172yBlSGQ4OqPQJkEWEpmSuXBOPlu669AYgB4kBRk7pU/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "projects",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/172yBlSGQ4OqPQJkEWEpmSuXBOPlu669AYgB4kBRk7pU/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "project_id": "={{ $json.project_id }}",
+            "project_name": "={{ $json.project_name }}",
+            "research_goal": "={{ $json.research_goal }}",
+            "product_description": "={{ $json.product_description }}",
+            "received_interviews": "0",
+            "analyzed_interviews": "0",
+            "competitive_analysis_status": "pending",
+            "research_status": "\"project_created\"",
+            "current_synthesis_version": "1",
+            "created_at": "={{ $json.created_at }}",
+            "updated_at": "={{ $json.updated_at }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "project_id",
+              "displayName": "project_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "project_name",
+              "displayName": "project_name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "research_goal",
+              "displayName": "research_goal",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "product_description",
+              "displayName": "product_description",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "received_interviews",
+              "displayName": "received_interviews",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "analyzed_interviews",
+              "displayName": "analyzed_interviews",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "competitive_analysis_status",
+              "displayName": "competitive_analysis_status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "competitive_synthesis_id",
+              "displayName": "competitive_synthesis_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "research_status",
+              "displayName": "research_status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "current_synthesis_version",
+              "displayName": "current_synthesis_version",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "created_at",
+              "displayName": "created_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "updated_at",
+              "displayName": "updated_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        416,
+        0
+      ],
+      "id": "d5792ac0-bde8-41b9-af7c-a9743bd21238",
+      "name": "03 — Save Project",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "KaXnEFiUPllLVm7z",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "tZi4yMRE1fwooqxz",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/tZi4yMRE1fwooqxz",
+          "cachedResultName": "WF-02 Competitive Analysis"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "project_id": "={{ $json.project_id }}",
+            "project_name": "={{ $json.project_name }}",
+            "research_goal": "={{ $json.research_goal }}",
+            "product_description": "={{ $json.product_description }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "project_id",
+              "displayName": "project_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "project_name",
+              "displayName": "project_name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "research_goal",
+              "displayName": "research_goal",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "product_description",
+              "displayName": "product_description",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {
+          "waitForSubWorkflow": true
+        }
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.3,
+      "position": [
+        624,
+        0
+      ],
+      "id": "87d23afa-ac75-4244-a8b1-b186012163d2",
+      "name": "04 — Run Competitive Analysis"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "01 — Tally Trigger": {
+      "main": [
+        [
+          {
+            "node": "02 — Normalize Input",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "02 — Normalize Input": {
+      "main": [
+        [
+          {
+            "node": "03 — Save Project",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "03 — Save Project": {
+      "main": [
+        [
+          {
+            "node": "04 — Run Competitive Analysis",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "94fd1b17-f6b9-48a0-b543-1de4f38c93a7",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "d4d45fe6ce8c84f8055fdf8cee8b9f35899dc09f547385770f86d0df7ceeb129"
+  },
+  "nodeGroups": [],
+  "id": "b9IybDT443BUHuy3",
+  "tags": [
+    {
+      "updatedAt": "2026-07-13T14:38:45.889Z",
+      "createdAt": "2026-07-13T14:38:45.889Z",
+      "id": "XsKY5DuuIt3CqZKz",
+      "name": "final project"
+    }
+  ]
+}

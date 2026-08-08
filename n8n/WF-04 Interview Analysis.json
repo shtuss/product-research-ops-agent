@@ -1,0 +1,708 @@
+{
+  "name": "WF-04 Interview Analysis",
+  "nodes": [
+    {
+      "parameters": {
+        "workflowInputs": {
+          "values": [
+            {
+              "name": "interview_id"
+            },
+            {
+              "name": "project_id"
+            },
+            {
+              "name": "participant_label"
+            },
+            {
+              "name": "research_goal"
+            },
+            {
+              "name": "transcript_raw"
+            },
+            {
+              "name": "submitted_at"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        0,
+        0
+      ],
+      "id": "939f9a45-9003-4c2b-9df2-c9eed052e620",
+      "name": "When Executed by Another Workflow"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Analyze the supplied interview transcript and extract evidence-based UX research findings.\n\nINTERVIEW METADATA\n\nInterview ID:\n{{ $json.interview_id }}\n\nProject ID:\n{{ $json.project_id }}\n\nParticipant label:\n{{ $json.participant_label }}\n\nResearch goal:\n{{ $json.research_goal }}\n\nSubmitted at:\n{{ $json.submitted_at }}\n\nINTERVIEW TRANSCRIPT\n\n{{ $json.transcript_raw }}\n\nTASK\n\n1. Copy interview_id exactly from INTERVIEW METADATA.\n2. Copy project_id exactly from INTERVIEW METADATA.\n3. Copy participant_label exactly from INTERVIEW METADATA.\n4. Write a concise evidence-based interview summary in 2 to 4 sentences.\n5. Extract 3 to 6 distinct findings when the transcript contains enough evidence.\n6. Every finding must be supported directly by the supplied transcript.\n7. Use one of these values for finding_type:\n   pain_point\n   user_need\n   behavior\n   motivation\n   expectation\n   opportunity\n   positive_signal\n8. Create a short snake_case theme_key.\n9. Write finding_text as a concise UX research insight.\n10. Copy a direct excerpt from the transcript into supporting_quote.\n11. Set quote_speaker to participant.\n12. Briefly explain the quote context.\n13. Set confidence as a number between 0 and 1.\n\nGROUNDING RULES\n\n- Use only the supplied transcript.\n- Do not use outside or prior knowledge.\n- Do not invent statements, needs, motivations, behaviors, product features, or quotes.\n- supporting_quote must be copied from the supplied transcript.\n- Do not create duplicate findings.\n- Do not use the research goal as evidence.\n- If the evidence is indirect or weak, lower confidence.\n- If no useful evidence exists, return an empty findings array.\n- Never return null for interview_id, project_id, or participant_label.\n- Do not rename, add, or remove output fields.\n\nFORMATTER TOOL RULES\n\nYou must call the format_final_json_response tool exactly once.\n\nPass exactly one top-level argument named \"output\".\n\nPlace the complete structured result inside that \"output\" argument.\n\nThe value inside \"output\" must have exactly this structure:\n\n{\n  \"interview_id\": \"string\",\n  \"project_id\": \"string\",\n  \"participant_label\": \"string\",\n  \"interview_summary\": \"string\",\n  \"findings\": [\n    {\n      \"finding_type\": \"string\",\n      \"theme_key\": \"string\",\n      \"finding_text\": \"string\",\n      \"supporting_quote\": \"string\",\n      \"quote_speaker\": \"string\",\n      \"quote_context\": \"string\",\n      \"confidence\": 0.0\n    }\n  ]\n}\n\nDo not pass interview_id, project_id, participant_label, interview_summary, or findings directly as top-level tool arguments.\n\nDo not add another wrapper such as result, response, analysis, or interview_analysis.",
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "You are a UX Research Interview Analyst.\n\nYour task is to analyze exactly one supplied user interview and extract evidence-based UX research findings.\n\nUse only the interview metadata and transcript supplied in the user message.\n\nNever use outside knowledge.\nNever invent participant statements or direct quotes.\nNever infer unsupported motivations, needs, behaviors, or product capabilities.\nKeep findings distinct, concise, and useful for product design research.\n\nCopy interview_id, project_id, and participant_label exactly from the supplied metadata.\n\nUse only these finding types:\npain_point\nuser_need\nbehavior\nmotivation\nexpectation\nopportunity\npositive_signal\n\ntheme_key must be short and written in snake_case.\n\nconfidence must be a number between 0 and 1.\n\nUse exactly the fields required by the connected output parser.\n\nWhen calling the formatter tool, pass exactly one top-level argument named \"output\" and place the complete structured result inside it.\n\nDo not add, remove, or rename output fields.\nReturn only the required structured result."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        208,
+        0
+      ],
+      "id": "ef0ff735-b3ad-48be-bf63-eab21da685cb",
+      "name": "01 — Interview Analyst"
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "output.findings",
+        "include": "allOtherFields",
+        "options": {
+          "destinationFieldName": "finding"
+        }
+      },
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [
+        560,
+        0
+      ],
+      "id": "cfb6a7ce-2e82-4eb2-9e48-8fd9924a78ad",
+      "name": "02 — Split Findings"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "172yBlSGQ4OqPQJkEWEpmSuXBOPlu669AYgB4kBRk7pU",
+          "mode": "list",
+          "cachedResultName": "Interview-to-Insights Pipeline",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/172yBlSGQ4OqPQJkEWEpmSuXBOPlu669AYgB4kBRk7pU/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 558485558,
+          "mode": "list",
+          "cachedResultName": "findings",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/172yBlSGQ4OqPQJkEWEpmSuXBOPlu669AYgB4kBRk7pU/edit#gid=558485558"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "finding_id": "={{ $json.output.interview_id + '-finding-' + String($itemIndex + 1) }}",
+            "project_id": "={{ $json.output.project_id }}",
+            "source_type": "=interview",
+            "source_id": "={{ $json.output.interview_id }}",
+            "interview_id": "={{ $json.output.interview_id }}",
+            "finding_type": "={{ $json.finding.finding_type }}",
+            "theme_key": "={{ $json.finding.theme_key }}",
+            "finding_text": "={{ $json.finding.finding_text }}",
+            "supporting_quote": "={{ $json.finding.supporting_quote }}",
+            "quote_speaker": "={{ $json.finding.quote_speaker }}",
+            "quote_context": "={{ $json.finding.quote_context }}",
+            "confidence": "={{ $json.finding.confidence }}",
+            "analysis_version": "=v1",
+            "created_at": "={{ $now.toISO() }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "finding_id",
+              "displayName": "finding_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "project_id",
+              "displayName": "project_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "source_type",
+              "displayName": "source_type",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "source_id",
+              "displayName": "source_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "interview_id",
+              "displayName": "interview_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "finding_type",
+              "displayName": "finding_type",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "theme_key",
+              "displayName": "theme_key",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "finding_text",
+              "displayName": "finding_text",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "supporting_quote",
+              "displayName": "supporting_quote",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "quote_speaker",
+              "displayName": "quote_speaker",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "quote_context",
+              "displayName": "quote_context",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "confidence",
+              "displayName": "confidence",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "analysis_version",
+              "displayName": "analysis_version",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "created_at",
+              "displayName": "created_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        768,
+        0
+      ],
+      "id": "9895e89c-9d1e-40b7-b1d0-9d4a805cb906",
+      "name": "03 — Save Findings",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "KaXnEFiUPllLVm7z",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "aggregate": "aggregateAllItemData",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [
+        976,
+        0
+      ],
+      "id": "f4c6314d-4964-42ac-af02-2ab431647940",
+      "name": "04 — Aggregate Results"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "172yBlSGQ4OqPQJkEWEpmSuXBOPlu669AYgB4kBRk7pU",
+          "mode": "list",
+          "cachedResultName": "Interview-to-Insights Pipeline",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/172yBlSGQ4OqPQJkEWEpmSuXBOPlu669AYgB4kBRk7pU/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1660084804,
+          "mode": "list",
+          "cachedResultName": "interviews",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/172yBlSGQ4OqPQJkEWEpmSuXBOPlu669AYgB4kBRk7pU/edit#gid=1660084804"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "analysis_status": "={{ 'completed' }}",
+            "analysis_version": "={{ 'v1' }}",
+            "finding_count": "={{ $('02 — Split Findings').all().length }}",
+            "processed_at": "={{ $now.toISO() }}",
+            "error_message": "={{ '' }}",
+            "interview_summary": "={{ $('01 — Interview Analyst').first().json.output.interview_summary }}",
+            "interview_id": "={{ $('When Executed by Another Workflow').item.json.interview_id }}"
+          },
+          "matchingColumns": [
+            "interview_id"
+          ],
+          "schema": [
+            {
+              "id": "interview_id",
+              "displayName": "interview_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "project_id",
+              "displayName": "project_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "tally_submission_id",
+              "displayName": "tally_submission_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "participant_label",
+              "displayName": "participant_label",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "interviewer_name",
+              "displayName": "interviewer_name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "transcript_raw",
+              "displayName": "transcript_raw",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "transcript_clean",
+              "displayName": "transcript_clean",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "content_hash",
+              "displayName": "content_hash",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "submitted_at",
+              "displayName": "submitted_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "analysis_status",
+              "displayName": "analysis_status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "analysis_version",
+              "displayName": "analysis_version",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "finding_count",
+              "displayName": "finding_count",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "cleaning_warnings_json",
+              "displayName": "cleaning_warnings_json",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "processed_at",
+              "displayName": "processed_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "error_message",
+              "displayName": "error_message",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "expected_interview_count",
+              "displayName": "expected_interview_count",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "interview_summary",
+              "displayName": "interview_summary",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        1184,
+        0
+      ],
+      "id": "4da0bb26-d0a0-4c19-aa96-48a236bbd930",
+      "name": "05 — Update Interview",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "KaXnEFiUPllLVm7z",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "38975d1e-bc73-49cc-ace1-a0211e353bc6",
+              "name": "success",
+              "value": true,
+              "type": "boolean"
+            },
+            {
+              "id": "7395bc13-5917-4002-b379-f355495b40d8",
+              "name": "interview_id",
+              "value": "={{ $('When Executed by Another Workflow').item.json.interview_id }}",
+              "type": "string"
+            },
+            {
+              "id": "29eadeb6-b77d-4953-9ae2-ae2d570deeb9",
+              "name": "project_id",
+              "value": "={{ $('When Executed by Another Workflow').item.json.project_id }}",
+              "type": "string"
+            },
+            {
+              "id": "7f9a9883-c20a-49ab-bc24-ba1654c93b23",
+              "name": "analysis_status",
+              "value": "={{ 'completed' }}",
+              "type": "string"
+            },
+            {
+              "id": "4631c505-6f39-4c7c-be07-a7559fd6ab70",
+              "name": "finding_count",
+              "value": "={{ $('02 — Split Findings').all().length }}",
+              "type": "number"
+            },
+            {
+              "id": "82080535-73bc-4f93-8c3a-6267c721f327",
+              "name": "interview_summary",
+              "value": "={{ $json.interview_summary }}",
+              "type": "string"
+            },
+            {
+              "id": "97ab537b-4d17-4233-9d4b-920556a821e8",
+              "name": "processed_at",
+              "value": "={{ $now.toISO() }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1392,
+        0
+      ],
+      "id": "5a851605-2f13-4a97-b19f-e055dcbe41e4",
+      "name": "06 — Return Analysis Result"
+    },
+    {
+      "parameters": {
+        "model": "meta-llama/llama-4-scout-17b-16e-instruct",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "typeVersion": 1,
+      "position": [
+        80,
+        208
+      ],
+      "id": "984dc609-de8b-4bae-9b89-71dd3a2d2596",
+      "name": "Groq Chat Model",
+      "credentials": {
+        "groqApi": {
+          "id": "7yQVA8XEf8clgx3T",
+          "name": "Groq account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "schemaType": "manual",
+        "inputSchema": "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"interview_id\": {\n      \"type\": \"string\"\n    },\n    \"project_id\": {\n      \"type\": \"string\"\n    },\n    \"participant_label\": {\n      \"type\": \"string\"\n    },\n    \"interview_summary\": {\n      \"type\": \"string\"\n    },\n    \"findings\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": \"object\",\n        \"properties\": {\n          \"finding_type\": {\n            \"type\": \"string\"\n          },\n          \"theme_key\": {\n            \"type\": \"string\"\n          },\n          \"finding_text\": {\n            \"type\": \"string\"\n          },\n          \"supporting_quote\": {\n            \"type\": \"string\"\n          },\n          \"quote_speaker\": {\n            \"type\": \"string\"\n          },\n          \"quote_context\": {\n            \"type\": \"string\"\n          },\n          \"confidence\": {\n            \"type\": \"number\"\n          }\n        },\n        \"required\": [\n          \"finding_type\",\n          \"theme_key\",\n          \"finding_text\",\n          \"supporting_quote\",\n          \"quote_speaker\",\n          \"quote_context\",\n          \"confidence\"\n        ]\n      }\n    }\n  },\n  \"required\": [\n    \"interview_id\",\n    \"project_id\",\n    \"participant_label\",\n    \"interview_summary\",\n    \"findings\"\n  ]\n}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        384,
+        256
+      ],
+      "id": "03346c29-ee3a-459a-abf9-f8da3a2d05a1",
+      "name": "Structured Output Parser1"
+    }
+  ],
+  "pinData": {
+    "When Executed by Another Workflow": [
+      {
+        "json": {
+          "interview_id": "bank-onboarding-2026-int-001",
+          "project_id": "bank-onboarding-2026",
+          "participant_label": "P-001",
+          "research_goal": "Identify user pain points, unmet needs and product opportunities in digital banking onboarding.",
+          "transcript_raw": "I recently opened an account with N26 after using Revolut for several years. The beginning of the process was straightforward because the app explained every step clearly. Identity verification was fast, although I had to repeat the video verification once because the lighting was poor. What frustrated me most was not knowing how long the account approval would take. After verification there was almost no communication. I kept checking the app because I didn't know whether something was happening in the background. Once the account became active everything worked well, but I think the onboarding could provide better progress updates and clearer expectations. I would also appreciate a short checklist showing which steps are completed and what still remains. Overall the experience was positive, but there were moments of uncertainty that reduced my confidence during onboarding.",
+          "submitted_at": "2026-07-15T10:15:44Z"
+        }
+      }
+    ]
+  },
+  "connections": {
+    "When Executed by Another Workflow": {
+      "main": [
+        [
+          {
+            "node": "01 — Interview Analyst",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "01 — Interview Analyst": {
+      "main": [
+        [
+          {
+            "node": "02 — Split Findings",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "02 — Split Findings": {
+      "main": [
+        [
+          {
+            "node": "03 — Save Findings",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "03 — Save Findings": {
+      "main": [
+        [
+          {
+            "node": "04 — Aggregate Results",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "04 — Aggregate Results": {
+      "main": [
+        [
+          {
+            "node": "05 — Update Interview",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "05 — Update Interview": {
+      "main": [
+        [
+          {
+            "node": "06 — Return Analysis Result",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Groq Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "01 — Interview Analyst",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser1": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "01 — Interview Analyst",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "d8043e9d-6bb8-4b5e-9bed-f8200d458896",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "d4d45fe6ce8c84f8055fdf8cee8b9f35899dc09f547385770f86d0df7ceeb129"
+  },
+  "nodeGroups": [],
+  "id": "T8uqZynKnUpRlBPm",
+  "tags": [
+    {
+      "updatedAt": "2026-07-13T14:38:45.889Z",
+      "createdAt": "2026-07-13T14:38:45.889Z",
+      "id": "XsKY5DuuIt3CqZKz",
+      "name": "final project"
+    }
+  ]
+}

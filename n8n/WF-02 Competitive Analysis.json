@@ -1,0 +1,1266 @@
+{
+  "name": "WF-02 Competitive Analysis",
+  "nodes": [
+    {
+      "parameters": {
+        "workflowInputs": {
+          "values": [
+            {
+              "name": "project_id"
+            },
+            {
+              "name": "project_name"
+            },
+            {
+              "name": "research_goal"
+            },
+            {
+              "name": "product_description"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        0,
+        0
+      ],
+      "id": "42935925-55d3-4e91-a77b-8c4ea635db43",
+      "name": "00 — Competitive Analysis Input"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "2ceab567-7560-40b0-a493-32fc05a89497",
+              "name": "search_query",
+              "value": "={{\n(\n`List the main competitors of this product.\n\n${$json.product_description}\n\nReturn the most relevant fintech or banking companies offering a similar product.`\n).slice(0,390)\n}}",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        208,
+        0
+      ],
+      "id": "b68c2895-91db-4a44-a4af-a339ba078512",
+      "name": "01 — Build Search Query"
+    },
+    {
+      "parameters": {
+        "endpointUrl": "https://mcp.tavily.com/mcp/?tavilyApiKey=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",
+        "tool": {
+          "__rl": true,
+          "value": "tavily_search",
+          "mode": "list",
+          "cachedResultName": "tavily_search"
+        },
+        "parameters": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "query": "={{ $json.search_query }}",
+            "max_results": 5,
+            "search_depth": "basic",
+            "topic": "general",
+            "include_raw_content": false,
+            "include_images": false,
+            "include_favicon": false
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "query",
+              "displayName": "query",
+              "defaultMatch": false,
+              "required": true,
+              "display": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "max_results",
+              "displayName": "max_results",
+              "defaultMatch": false,
+              "required": false,
+              "display": true,
+              "type": "number",
+              "removed": false
+            },
+            {
+              "id": "search_depth",
+              "displayName": "search_depth",
+              "defaultMatch": false,
+              "required": false,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "basic",
+                  "value": "basic"
+                },
+                {
+                  "name": "advanced",
+                  "value": "advanced"
+                },
+                {
+                  "name": "fast",
+                  "value": "fast"
+                },
+                {
+                  "name": "ultra-fast",
+                  "value": "ultra-fast"
+                }
+              ],
+              "removed": false
+            },
+            {
+              "id": "topic",
+              "displayName": "topic",
+              "defaultMatch": false,
+              "required": false,
+              "display": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "time_range",
+              "displayName": "time_range",
+              "defaultMatch": false,
+              "required": false,
+              "display": true,
+              "type": "string",
+              "removed": true
+            },
+            {
+              "id": "include_images",
+              "displayName": "include_images",
+              "defaultMatch": false,
+              "required": false,
+              "display": true,
+              "type": "boolean",
+              "removed": false
+            },
+            {
+              "id": "include_image_descriptions",
+              "displayName": "include_image_descriptions",
+              "defaultMatch": false,
+              "required": false,
+              "display": true,
+              "type": "boolean",
+              "removed": true
+            },
+            {
+              "id": "include_raw_content",
+              "displayName": "include_raw_content",
+              "defaultMatch": false,
+              "required": false,
+              "display": true,
+              "type": "boolean",
+              "removed": false
+            },
+            {
+              "id": "include_domains",
+              "displayName": "include_domains",
+              "defaultMatch": false,
+              "required": false,
+              "display": true,
+              "type": "array",
+              "defaultValue": "[\n  \"string\"\n]",
+              "removed": true
+            },
+            {
+              "id": "exclude_domains",
+              "displayName": "exclude_domains",
+              "defaultMatch": false,
+              "required": false,
+              "display": true,
+              "type": "array",
+              "defaultValue": "[\n  \"string\"\n]",
+              "removed": true
+            },
+            {
+              "id": "country",
+              "displayName": "country",
+              "defaultMatch": false,
+              "required": false,
+              "display": true,
+              "type": "string",
+              "removed": true
+            },
+            {
+              "id": "include_favicon",
+              "displayName": "include_favicon",
+              "defaultMatch": false,
+              "required": false,
+              "display": true,
+              "type": "boolean",
+              "removed": false
+            },
+            {
+              "id": "start_date",
+              "displayName": "start_date",
+              "defaultMatch": false,
+              "required": false,
+              "display": true,
+              "type": "string",
+              "removed": true
+            },
+            {
+              "id": "end_date",
+              "displayName": "end_date",
+              "defaultMatch": false,
+              "required": false,
+              "display": true,
+              "type": "string",
+              "removed": true
+            },
+            {
+              "id": "exact_match",
+              "displayName": "exact_match",
+              "defaultMatch": false,
+              "required": false,
+              "display": true,
+              "type": "string",
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.mcpClient",
+      "typeVersion": 1.1,
+      "position": [
+        416,
+        0
+      ],
+      "id": "c8470e70-ae15-40d9-9bc8-226cebf60f4a",
+      "name": "02 — Tavily Search via MCP"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "592a9524-5ee7-4118-a7c2-79a2f1477640",
+              "name": "project_id",
+              "value": "={{ $('01 — Build Search Query').item.json.project_id }}",
+              "type": "string"
+            },
+            {
+              "id": "5670c885-d7f4-4233-98f7-2c77d51a530a",
+              "name": "project_name",
+              "value": "={{ $('01 — Build Search Query').item.json.project_name }}",
+              "type": "string"
+            },
+            {
+              "id": "6c632fd1-cfd8-4122-b2c6-bf1ed50e39a9",
+              "name": "research_goal",
+              "value": "={{ $('01 — Build Search Query').item.json.research_goal }}",
+              "type": "string"
+            },
+            {
+              "id": "9fec9e7d-df52-4c76-8d29-3de8e90febe0",
+              "name": "product_description",
+              "value": "={{ $('01 — Build Search Query').item.json.product_description }}",
+              "type": "string"
+            },
+            {
+              "id": "105a6b3a-c3ed-49cc-a335-6eeddd4c91ff",
+              "name": "search_results",
+              "value": "={{ ($json.structuredContent?.results || []).slice(0, 5).map(result => ({\n  title: String(result.title || ''),\n  url: String(result.url || ''),\n  content: String(result.content || '').slice(0, 700),\n  score: Number(result.score || 0)\n})) }}",
+              "type": "array"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        624,
+        0
+      ],
+      "id": "bf64ac2e-bfeb-4369-9191-29a310b4d3ff",
+      "name": "03 — Normalize Search Results"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Analyze the supplied search results and identify the three most relevant direct competitors for the product.\n\nPROJECT CONTEXT\n\nProject ID:\n{{ $json.project_id }}\n\nProject name:\n{{ $json.project_name }}\n\nResearch goal:\n{{ $json.research_goal }}\n\nProduct description:\n{{ $json.product_description }}\n\nSEARCH RESULTS\n\n{{ JSON.stringify($json.search_results) }}\n\nTASK\n\n1. Read all supplied search results.\n2. Extract real companies or products mentioned in the evidence.\n3. Ignore article titles, publications, reports, lists, agencies, directories, case studies and generic categories.\n4. Select exactly three competitors when sufficient evidence is available.\n5. Prioritize competitors that:\n   - offer the same or a highly similar core product;\n   - solve a similar user problem;\n   - target comparable users;\n   - operate in the same or a relevant geographic market;\n   - provide a comparable digital product experience.\n6. For digital banking products, prioritize digital banks and neobanks over products focused mainly on cryptocurrency, budgeting, transfers or payment processing.\n7. For each selected competitor:\n   - provide its exact company or product name;\n   - explain why it is relevant;\n   - identify the source title and source URL supporting the selection;\n   - provide a confidence score between 0 and 1.\n8. Do not invent an official company URL. Use the URL of the supplied search result as source_url.\n9. Do not make claims that are not supported by the supplied search results.\n10. If fewer than three strong direct competitors are supported, select the best available candidates and lower their confidence scores.\n11. Return only the required structured output.",
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "{\n  \"competitors\": [\n    {\n      \"competitor_name\": \"string\",\n      \"selection_rationale\": \"string\",\n      \"source_url\": \"string\",\n      \"confidence\": 0.0\n    }\n  ]\n}"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        832,
+        0
+      ],
+      "id": "7ea6ffad-ae57-4e08-8685-9bece9290767",
+      "name": "04 — Competitive Analysis Agent"
+    },
+    {
+      "parameters": {
+        "model": "llama-3.3-70b-versatile",
+        "options": {
+          "temperature": 0.2
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "typeVersion": 1,
+      "position": [
+        752,
+        256
+      ],
+      "id": "e8b18de3-c9c1-4d49-bb89-1df6b0b4ea63",
+      "name": "Groq Chat Model",
+      "credentials": {
+        "groqApi": {
+          "id": "7yQVA8XEf8clgx3T",
+          "name": "Groq account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "schemaType": "manual",
+        "inputSchema": "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"search_summary\": {\n      \"type\": \"string\"\n    },\n    \"competitors\": {\n      \"type\": \"array\",\n      \"maxItems\": 3,\n      \"items\": {\n        \"type\": \"object\",\n        \"properties\": {\n          \"competitor_name\": {\n            \"type\": \"string\"\n          },\n          \"competitor_url\": {\n            \"type\": \"string\"\n          },\n          \"competitor_type\": {\n            \"type\": \"string\"\n          },\n          \"relevance_reason\": {\n            \"type\": \"string\"\n          },\n          \"discovery_confidence\": {\n            \"type\": \"number\"\n          }\n        },\n        \"required\": [\n          \"competitor_name\",\n          \"competitor_url\",\n          \"competitor_type\",\n          \"relevance_reason\",\n          \"discovery_confidence\"\n        ],\n        \"additionalProperties\": false\n      }\n    }\n  },\n  \"required\": [\n    \"search_summary\",\n    \"competitors\"\n  ],\n  \"additionalProperties\": false\n}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        912,
+        240
+      ],
+      "id": "2613eef5-f70a-4ed0-97f3-4d009e656d4d",
+      "name": "Structured Output Parser"
+    },
+    {
+      "parameters": {
+        "schemaType": "manual",
+        "inputSchema": "{\n  \"project_id\": \"bank-onboarding-2026\",\n  \"competitors\": [\n    {\n      \"competitor_name\": \"N26\",\n      \"selection_rationale\": \"N26 offers mobile-first bank account opening and digital account management for customers in Germany.\",\n      \"source_title\": \"German challenger banks: who's who\",\n      \"source_url\": \"https://example.com/source\",\n      \"confidence\": 0.91\n    },\n    {\n      \"competitor_name\": \"Revolut\",\n      \"selection_rationale\": \"Revolut provides digital financial accounts and mobile onboarding for a comparable European user group.\",\n      \"source_title\": \"European digital banking companies\",\n      \"source_url\": \"https://example.com/source\",\n      \"confidence\": 0.84\n    },\n    {\n      \"competitor_name\": \"bunq\",\n      \"selection_rationale\": \"bunq is a European mobile bank with fully digital account creation and account management.\",\n      \"source_title\": \"European challenger banks overview\",\n      \"source_url\": \"https://example.com/source\",\n      \"confidence\": 0.8\n    }\n  ],\n  \"selection_summary\": \"The selected competitors provide comparable mobile-first banking services and digital account onboarding for European users.\",\n  \"overall_confidence\": 0.85\n}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        1104,
+        304
+      ],
+      "id": "353a7030-347f-4c42-b9e2-883c0cfb78ec",
+      "name": "Structured Output Parser1"
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "output.competitors",
+        "options": {
+          "destinationFieldName": "competitor"
+        }
+      },
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [
+        1184,
+        0
+      ],
+      "id": "3c06ca17-54ef-466d-a20e-1152238387a3",
+      "name": "05 — Split Competitors"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "a0fcd743-ba64-4efc-b870-8f288168668e",
+              "name": "competitor_search_query",
+              "value": "={{\n(\n`\"${$json.competitor.competitor_name}\" app onboarding UX review account opening identity verification usability strengths weaknesses`\n).slice(0, 390)\n}}",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1392,
+        0
+      ],
+      "id": "af88c146-283a-4bc0-99c5-681b3296dc0d",
+      "name": "06 — Build Competitor Search Query"
+    },
+    {
+      "parameters": {
+        "endpointUrl": "https://mcp.tavily.com/mcp/?tavilyApiKey=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",
+        "tool": {
+          "__rl": true,
+          "value": "tavily_search",
+          "mode": "list",
+          "cachedResultName": "tavily_search"
+        },
+        "parameters": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "query": "={{ $json.competitor_search_query }}",
+            "max_results": 5,
+            "search_depth": "basic",
+            "topic": "general",
+            "include_images": false,
+            "include_raw_content": false,
+            "include_favicon": false
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "query",
+              "displayName": "query",
+              "defaultMatch": false,
+              "required": true,
+              "display": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "max_results",
+              "displayName": "max_results",
+              "defaultMatch": false,
+              "required": false,
+              "display": true,
+              "type": "number",
+              "removed": false
+            },
+            {
+              "id": "search_depth",
+              "displayName": "search_depth",
+              "defaultMatch": false,
+              "required": false,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "basic",
+                  "value": "basic"
+                },
+                {
+                  "name": "advanced",
+                  "value": "advanced"
+                },
+                {
+                  "name": "fast",
+                  "value": "fast"
+                },
+                {
+                  "name": "ultra-fast",
+                  "value": "ultra-fast"
+                }
+              ],
+              "removed": false
+            },
+            {
+              "id": "topic",
+              "displayName": "topic",
+              "defaultMatch": false,
+              "required": false,
+              "display": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "time_range",
+              "displayName": "time_range",
+              "defaultMatch": false,
+              "required": false,
+              "display": true,
+              "type": "string",
+              "removed": true
+            },
+            {
+              "id": "include_images",
+              "displayName": "include_images",
+              "defaultMatch": false,
+              "required": false,
+              "display": true,
+              "type": "boolean",
+              "removed": false
+            },
+            {
+              "id": "include_image_descriptions",
+              "displayName": "include_image_descriptions",
+              "defaultMatch": false,
+              "required": false,
+              "display": true,
+              "type": "boolean",
+              "removed": true
+            },
+            {
+              "id": "include_raw_content",
+              "displayName": "include_raw_content",
+              "defaultMatch": false,
+              "required": false,
+              "display": true,
+              "type": "boolean",
+              "removed": false
+            },
+            {
+              "id": "include_domains",
+              "displayName": "include_domains",
+              "defaultMatch": false,
+              "required": false,
+              "display": true,
+              "type": "array",
+              "defaultValue": "[\n  \"string\"\n]",
+              "removed": true
+            },
+            {
+              "id": "exclude_domains",
+              "displayName": "exclude_domains",
+              "defaultMatch": false,
+              "required": false,
+              "display": true,
+              "type": "array",
+              "defaultValue": "[\n  \"string\"\n]",
+              "removed": true
+            },
+            {
+              "id": "country",
+              "displayName": "country",
+              "defaultMatch": false,
+              "required": false,
+              "display": true,
+              "type": "string",
+              "removed": true
+            },
+            {
+              "id": "include_favicon",
+              "displayName": "include_favicon",
+              "defaultMatch": false,
+              "required": false,
+              "display": true,
+              "type": "boolean",
+              "removed": false
+            },
+            {
+              "id": "start_date",
+              "displayName": "start_date",
+              "defaultMatch": false,
+              "required": false,
+              "display": true,
+              "type": "string",
+              "removed": true
+            },
+            {
+              "id": "end_date",
+              "displayName": "end_date",
+              "defaultMatch": false,
+              "required": false,
+              "display": true,
+              "type": "string",
+              "removed": true
+            },
+            {
+              "id": "exact_match",
+              "displayName": "exact_match",
+              "defaultMatch": false,
+              "required": false,
+              "display": true,
+              "type": "string",
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.mcpClient",
+      "typeVersion": 1.1,
+      "position": [
+        1600,
+        0
+      ],
+      "id": "3b0d4952-5846-4d7a-a1c3-66660e300f20",
+      "name": "07 — Search Competitor Evidence via MCP"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "50022b04-bf62-4b0d-bf7a-5857e7e18d4b",
+              "name": "project_id",
+              "value": "={{ $('03 — Normalize Search Results').first().json.project_id }}",
+              "type": "string"
+            },
+            {
+              "id": "00c0d50e-d396-4f04-a564-08280653f8f6",
+              "name": "project_name",
+              "value": "={{ $('03 — Normalize Search Results').first().json.project_name }}",
+              "type": "string"
+            },
+            {
+              "id": "6d0673fa-d808-4a49-83e8-88dc76c6b38c",
+              "name": "research_goal",
+              "value": "={{ $('03 — Normalize Search Results').first().json.research_goal }}",
+              "type": "string"
+            },
+            {
+              "id": "4ed0d73d-ecf2-4e53-9f89-b607f5d9e90e",
+              "name": "product_description",
+              "value": "={{ $('03 — Normalize Search Results').first().json.product_description }}",
+              "type": "string"
+            },
+            {
+              "id": "0a48ad10-2526-4014-a458-a458e8934f4d",
+              "name": "competitor_name",
+              "value": "={{ $('06 — Build Competitor Search Query').item.json.competitor.competitor_name }}",
+              "type": "string"
+            },
+            {
+              "id": "525a2bb9-a955-4708-b264-a7c6bdb83898",
+              "name": "selection_rationale",
+              "value": "={{ $('06 — Build Competitor Search Query').item.json.competitor.selection_rationale }}",
+              "type": "string"
+            },
+            {
+              "id": "f4790ff4-18bf-4225-a3ae-65ce1113fae4",
+              "name": "source_url",
+              "value": "={{ $('06 — Build Competitor Search Query').item.json.competitor.source_url }}",
+              "type": "string"
+            },
+            {
+              "id": "4fa02fee-34c7-47ea-8fdb-6df2064d002a",
+              "name": "confidence",
+              "value": "={{ $('06 — Build Competitor Search Query').item.json.competitor.confidence }}",
+              "type": "string"
+            },
+            {
+              "id": "c32d2e5d-dd60-4f17-b0b4-a467c1ae1844",
+              "name": "evidence_results",
+              "value": "={{\n($json.structuredContent?.results || []).map(r => ({\n    title: r.title,\n    url: r.url,\n    content: String(r.content || '').slice(0,1000),\n    score: r.score\n}))\n}}",
+              "type": "array"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1808,
+        0
+      ],
+      "id": "99035a9f-684c-4833-87f0-823911d0a18c",
+      "name": "08 — Normalize Competitor Evidence"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Analyze the supplied evidence for one competitor.\n\nCOMPETITOR\n\nName:\n{{ $json.competitor_name }}\n\nSelection rationale:\n{{ $json.selection_rationale }}\n\nPROJECT CONTEXT\n\nProject:\n{{ $json.project_name }}\n\nResearch goal:\n{{ $json.research_goal }}\n\nProduct description:\n{{ $json.product_description }}\n\nEVIDENCE\n\n{{ JSON.stringify($json.evidence_results) }}\n\nTASK\n\nEvaluate the competitor across these dimensions:\n\n- onboarding_process\n- account_creation\n- identity_verification\n- progress_visibility\n- error_recovery\n- trust_signals\n- strengths\n- weaknesses\n- evidence_based_product_opportunities\n- evidence_quality\n- confidence\n\nEVIDENCE RULES\n\n1. Use only evidence that explicitly refers to {{ $json.competitor_name }}.\n2. Ignore generic articles and statements about other products.\n3. Do not use prior knowledge.\n4. Do not convert general UX recommendations into competitor features or strengths.\n5. Do not describe the experience as easy, intuitive, fast, transparent, fragmented, or trustworthy unless the supplied evidence explicitly supports that description.\n6. If the evidence only confirms that a process exists, state that it exists and that the UX details are not described.\n7. For unsupported text fields, return exactly \"Not enough evidence\".\n8. For unsupported array fields, return [].\n9. Keep every observation concise and factual.\n10. Use exactly the structured output schema without adding or renaming fields.\n11. Return only the required structured output.",
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "You are a Senior UX Researcher specializing in competitive product analysis.\n\nAnalyze ONE named competitor using only the supplied evidence.\n\nThe supplied evidence is the complete and only source of truth. Do not use prior knowledge about the competitor.\n\nGrounding rules:\n- Use only evidence that explicitly refers to the named competitor.\n- Ignore generic banking UX advice, industry patterns, and claims about other companies.\n- Do not infer features merely because they are common in the market.\n- Do not infer UX quality from the existence of a feature.\n- Do not use marketing language as proof of usability or quality.\n- Every non-empty claim must be directly supported by the supplied evidence.\n- Paraphrase evidence conservatively.\n- If evidence confirms that a process or feature exists but does not describe its UX, state only that it exists and that UX details are not described.\n- For unsupported text fields, return exactly: \"Not enough evidence\".\n- For unsupported array fields, return an empty array.\n- Confidence must be a number between 0 and 1.\n- Evidence quality must be one of: high, medium, low.\n- Use exactly the fields required by the structured output parser.\n- Never add, remove, rename, or replace output fields.\n- Return only the required structured output."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        2016,
+        0
+      ],
+      "id": "429f5423-0998-42df-88bc-5666dfb0a303",
+      "name": "09 — Competitor UX Analysis Agent"
+    },
+    {
+      "parameters": {
+        "model": "llama-3.3-70b-versatile",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "typeVersion": 1,
+      "position": [
+        1872,
+        208
+      ],
+      "id": "2e131b9a-1fac-4357-bc76-9a2512307c37",
+      "name": "Groq Chat Model1",
+      "credentials": {
+        "groqApi": {
+          "id": "7yQVA8XEf8clgx3T",
+          "name": "Groq account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "schemaType": "manual",
+        "inputSchema": "{\n  \"competitor_name\": \"string\",\n\n  \"account_creation\": \"string\",\n  \"identity_verification\": \"string\",\n  \"onboarding_process\": \"string\",\n  \"progress_visibility\": \"string\",\n  \"error_recovery\": \"string\",\n\n  \"trust_signals\": [\n    \"string\"\n  ],\n\n  \"strengths\": [\n    \"string\"\n  ],\n\n  \"weaknesses\": [\n    \"string\"\n  ],\n\n  \"evidence_based_product_opportunities\": [\n    \"string\"\n  ],\n\n  \"evidence_quality\": \"string\",\n\n  \"confidence\": \"number\"\n}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        2192,
+        208
+      ],
+      "id": "53d0067e-4e34-4113-8701-7ff5f6699c34",
+      "name": "Structured Output Parser2"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Analyze the supplied UX analyses for all selected competitors.\n\nPROJECT CONTEXT\n\nProject ID:\n{{ $('08 — Normalize Competitor Evidence').first().json.project_id }}\n\nResearch goal:\n{{ $('08 — Normalize Competitor Evidence').first().json.research_goal }}\n\nProduct description:\n{{ $('08 — Normalize Competitor Evidence').first().json.product_description }}\n\nCOMPETITOR ANALYSES\n\n{{ JSON.stringify($json.competitor_analyses, null, 2) }}\n\nTASK\n\nCreate one evidence-based cross-competitor UX synthesis.\n\n1. Copy project_id exactly from PROJECT CONTEXT.\n2. Copy research_goal exactly from PROJECT CONTEXT.\n3. Extract the competitor names from COMPETITOR ANALYSES.\n4. Write a concise comparison summary.\n5. Identify recurring patterns supported by the supplied analyses.\n6. Identify notable best practices and specify which competitors support them.\n7. Identify common weaknesses only when supported by the analyses.\n8. Identify market gaps grounded in missing or weakly addressed user-experience areas.\n9. Identify product opportunities grounded in the supplied analyses.\n10. Set confidence between 0 and 1 based on the amount, quality, and consistency of evidence.\n\nIMPORTANT\n\n- Do not use outside knowledge.\n- Do not invent competitor capabilities.\n- Do not treat \"Not enough evidence\" as a weakness.\n- A cross-competitor pattern should normally involve at least two competitors.\n- If no reliable common weakness, gap, or opportunity exists, return an empty array.\n- evidence_strength must be one of: high, medium, low.\n- Keep every conclusion concise and evidence-based.\n\nCall the formatter tool exactly once.\n\nPass the complete result inside its single required argument named \"output\".\nDo not pass synthesis fields directly as top-level tool arguments.",
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "You are a Senior Competitive UX Research Analyst.\n\nYour task is to synthesize the supplied UX analyses of multiple competitors.\n\nUse only the competitor analyses and project context supplied in the user message.\n\nRESEARCH RULES\n\n- Never use prior knowledge.\n- Never invent competitor features, UX flows, strengths, weaknesses, gaps, or opportunities.\n- Base every conclusion only on the supplied competitor analyses.\n- Treat \"Not enough evidence\" as missing evidence, not as a competitor weakness.\n- Distinguish between patterns supported by multiple competitors and observations supported by only one competitor.\n- Include a common weakness only when the supplied analyses explicitly support it.\n- Include a market gap or product opportunity only when it can be reasonably derived from the supplied analyses.\n- Reflect limited, inconsistent, or low-quality evidence in the confidence score.\n- Confidence must be a number between 0 and 1.\n- Copy project_id and research_goal exactly from the supplied project context.\n\nFORMATTER TOOL RULES\n\nYou must call the format_final_json_response tool exactly once.\n\nThe tool call must contain exactly one top-level argument named \"output\".\n\nPlace the complete synthesis object inside that \"output\" argument.\n\nCorrect tool-call argument structure:\n\n{\n  \"output\": {\n    \"project_id\": \"string\",\n    \"research_goal\": \"string\",\n    \"competitor_names\": [\"string\"],\n    \"competitor_comparison_summary\": \"string\",\n    \"cross_competitor_patterns\": [],\n    \"best_practices\": [],\n    \"common_weaknesses\": [],\n    \"market_gaps\": [],\n    \"product_opportunities\": [],\n    \"confidence\": 0.0\n  }\n}\n\nDo not pass project_id, research_goal, confidence, or any synthesis field directly as a top-level tool argument.\n\nDo not add another wrapper such as result, synthesis, response, or cross_competitor_ux_synthesis.\n\nUse exactly the fields required by the formatter schema."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        2576,
+        0
+      ],
+      "id": "8f50fde5-8f7b-474e-882d-a804eb565436",
+      "name": "11 — Competitive Synthesis Agent"
+    },
+    {
+      "parameters": {
+        "model": "llama-3.3-70b-versatile",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "typeVersion": 1,
+      "position": [
+        2432,
+        208
+      ],
+      "id": "70509a25-696c-4aca-a592-db57afcd7b18",
+      "name": "Groq Chat Model2",
+      "credentials": {
+        "groqApi": {
+          "id": "7yQVA8XEf8clgx3T",
+          "name": "Groq account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "3dd20b86-e0b3-433b-bace-080a7a1fc790",
+              "name": "success",
+              "value": true,
+              "type": "boolean"
+            },
+            {
+              "id": "bf075b4b-ae18-4dbf-9c5f-24ba486d1e73",
+              "name": "project_id",
+              "value": "={{ $('11 — Competitive Synthesis Agent').item.json.output.project_id }}",
+              "type": "string"
+            },
+            {
+              "id": "4b49a4b9-8cbf-466f-acc3-b504cc6de6e7",
+              "name": "analysis_status",
+              "value": "={{ 'completed' }}",
+              "type": "string"
+            },
+            {
+              "id": "575ddfe5-6d4a-4475-a2b6-de0f2c18ebf8",
+              "name": "competitors_analyzed",
+              "value": "={{ $('11 — Competitive Synthesis Agent').item.json.output.competitor_names.length }}",
+              "type": "number"
+            },
+            {
+              "id": "7e7baa9a-5319-407c-9bf4-13271d016fdf",
+              "name": "competitor_names",
+              "value": "={{ $('11 — Competitive Synthesis Agent').item.json.output.competitor_names }}",
+              "type": "array"
+            },
+            {
+              "id": "74dc16bd-c71d-45b1-9afa-782f34f1aa7d",
+              "name": "summary",
+              "value": "={{ $('11 — Competitive Synthesis Agent').item.json.output.competitor_comparison_summary }}",
+              "type": "string"
+            },
+            {
+              "id": "1be0fed8-044e-48d0-a2e9-82a1b395f091",
+              "name": "confidence",
+              "value": "={{ $('11 — Competitive Synthesis Agent').item.json.output.confidence }}",
+              "type": "number"
+            },
+            {
+              "id": "0291cad0-f766-48b5-912f-47dc431f21bd",
+              "name": "competitive_synthesis_id",
+              "value": "={{ $json.competitive_synthesis_id }}",
+              "type": "string"
+            },
+            {
+              "id": "ac938182-7dd3-4542-b139-86e1c1c3ff67",
+              "name": "completed_at",
+              "value": "={{ $now.toISO() }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        3136,
+        0
+      ],
+      "id": "a543327b-6be8-4f95-98ce-bcf3fb46c028",
+      "name": "13 — Return Competitive Analysis Result"
+    },
+    {
+      "parameters": {
+        "fieldsToAggregate": {
+          "fieldToAggregate": [
+            {
+              "fieldToAggregate": "output",
+              "renameField": true,
+              "outputFieldName": "competitor_analyses"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [
+        2368,
+        0
+      ],
+      "id": "1e758e93-71e3-46fb-8f7f-4e1717fac1de",
+      "name": "10 — Aggregate Competitor Analyses"
+    },
+    {
+      "parameters": {
+        "schemaType": "manual",
+        "inputSchema": "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"project_id\": {\n      \"type\": \"string\"\n    },\n    \"research_goal\": {\n      \"type\": \"string\"\n    },\n    \"competitor_names\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": \"string\"\n      }\n    },\n    \"competitor_comparison_summary\": {\n      \"type\": \"string\"\n    },\n    \"cross_competitor_patterns\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": \"object\",\n        \"properties\": {\n          \"pattern\": {\n            \"type\": \"string\"\n          },\n          \"competitors\": {\n            \"type\": \"array\",\n            \"items\": {\n              \"type\": \"string\"\n            }\n          },\n          \"related_dimensions\": {\n            \"type\": \"array\",\n            \"items\": {\n              \"type\": \"string\"\n            }\n          }\n        },\n        \"required\": [\n          \"pattern\",\n          \"competitors\",\n          \"related_dimensions\"\n        ]\n      }\n    },\n    \"best_practices\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": \"object\",\n        \"properties\": {\n          \"practice\": {\n            \"type\": \"string\"\n          },\n          \"supported_by\": {\n            \"type\": \"array\",\n            \"items\": {\n              \"type\": \"string\"\n            }\n          },\n          \"evidence_strength\": {\n            \"type\": \"string\"\n          }\n        },\n        \"required\": [\n          \"practice\",\n          \"supported_by\",\n          \"evidence_strength\"\n        ]\n      }\n    },\n    \"common_weaknesses\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": \"object\",\n        \"properties\": {\n          \"weakness\": {\n            \"type\": \"string\"\n          },\n          \"supported_by\": {\n            \"type\": \"array\",\n            \"items\": {\n              \"type\": \"string\"\n            }\n          }\n        },\n        \"required\": [\n          \"weakness\",\n          \"supported_by\"\n        ]\n      }\n    },\n    \"market_gaps\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": \"string\"\n      }\n    },\n    \"product_opportunities\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": \"string\"\n      }\n    },\n    \"confidence\": {\n      \"type\": \"number\"\n    }\n  },\n  \"required\": [\n    \"project_id\",\n    \"research_goal\",\n    \"competitor_names\",\n    \"competitor_comparison_summary\",\n    \"cross_competitor_patterns\",\n    \"best_practices\",\n    \"common_weaknesses\",\n    \"market_gaps\",\n    \"product_opportunities\",\n    \"confidence\"\n  ]\n}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        2752,
+        208
+      ],
+      "id": "868467fd-14a8-4d2e-8800-8cd5aec6d2d7",
+      "name": "Structured Output Parser3"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "172yBlSGQ4OqPQJkEWEpmSuXBOPlu669AYgB4kBRk7pU",
+          "mode": "list",
+          "cachedResultName": "Interview-to-Insights Pipeline",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/172yBlSGQ4OqPQJkEWEpmSuXBOPlu669AYgB4kBRk7pU/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 63668664,
+          "mode": "list",
+          "cachedResultName": "competitive_synthesis",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/172yBlSGQ4OqPQJkEWEpmSuXBOPlu669AYgB4kBRk7pU/edit#gid=63668664"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "competitive_synthesis_id": "={{ $json.output.project_id + '-competitive-' + $now.toMillis() }}",
+            "project_id": "={{ $json.output.project_id }}",
+            "competitor_names_json": "={{ JSON.stringify($json.output.competitor_names) }}",
+            "competitor_comparison_summary": "={{ $json.output.competitor_comparison_summary }}",
+            "cross_competitor_patterns_json": "={{ JSON.stringify($json.output.cross_competitor_patterns) }}",
+            "best_practices_json": "={{ JSON.stringify($json.output.best_practices) }}",
+            "common_weaknesses_json": "={{ JSON.stringify($json.output.common_weaknesses) }}",
+            "market_gaps_json": "={{ JSON.stringify($json.output.market_gaps) }}",
+            "product_opportunities_json": "={{ JSON.stringify($json.output.product_opportunities) }}",
+            "confidence": "={{ $json.output.confidence }}",
+            "analysis_version": "={{ 'v1' }}",
+            "created_at": "={{ $now.toISO() }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "competitive_synthesis_id",
+              "displayName": "competitive_synthesis_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "project_id",
+              "displayName": "project_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "competitor_names_json",
+              "displayName": "competitor_names_json",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "competitor_comparison_summary",
+              "displayName": "competitor_comparison_summary",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "cross_competitor_patterns_json",
+              "displayName": "cross_competitor_patterns_json",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "best_practices_json",
+              "displayName": "best_practices_json",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "common_weaknesses_json",
+              "displayName": "common_weaknesses_json",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "market_gaps_json",
+              "displayName": "market_gaps_json",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "product_opportunities_json",
+              "displayName": "product_opportunities_json",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "confidence",
+              "displayName": "confidence",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "analysis_version",
+              "displayName": "analysis_version",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "created_at",
+              "displayName": "created_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        2928,
+        0
+      ],
+      "id": "c32a41fc-56d9-4f71-8deb-63e4346ba2e1",
+      "name": "12 — Save Competitive Synthesis",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "KaXnEFiUPllLVm7z",
+          "name": "Google Sheets account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "00 — Competitive Analysis Input": {
+      "main": [
+        [
+          {
+            "node": "01 — Build Search Query",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "01 — Build Search Query": {
+      "main": [
+        [
+          {
+            "node": "02 — Tavily Search via MCP",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "02 — Tavily Search via MCP": {
+      "main": [
+        [
+          {
+            "node": "03 — Normalize Search Results",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "03 — Normalize Search Results": {
+      "main": [
+        [
+          {
+            "node": "04 — Competitive Analysis Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Groq Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "04 — Competitive Analysis Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser": {
+      "ai_outputParser": [
+        []
+      ]
+    },
+    "Structured Output Parser1": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "04 — Competitive Analysis Agent",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "04 — Competitive Analysis Agent": {
+      "main": [
+        [
+          {
+            "node": "05 — Split Competitors",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "05 — Split Competitors": {
+      "main": [
+        [
+          {
+            "node": "06 — Build Competitor Search Query",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "06 — Build Competitor Search Query": {
+      "main": [
+        [
+          {
+            "node": "07 — Search Competitor Evidence via MCP",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "07 — Search Competitor Evidence via MCP": {
+      "main": [
+        [
+          {
+            "node": "08 — Normalize Competitor Evidence",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "08 — Normalize Competitor Evidence": {
+      "main": [
+        [
+          {
+            "node": "09 — Competitor UX Analysis Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Groq Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "09 — Competitor UX Analysis Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser2": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "09 — Competitor UX Analysis Agent",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "09 — Competitor UX Analysis Agent": {
+      "main": [
+        [
+          {
+            "node": "10 — Aggregate Competitor Analyses",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Groq Chat Model2": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "11 — Competitive Synthesis Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "11 — Competitive Synthesis Agent": {
+      "main": [
+        [
+          {
+            "node": "12 — Save Competitive Synthesis",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "10 — Aggregate Competitor Analyses": {
+      "main": [
+        [
+          {
+            "node": "11 — Competitive Synthesis Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser3": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "11 — Competitive Synthesis Agent",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "12 — Save Competitive Synthesis": {
+      "main": [
+        [
+          {
+            "node": "13 — Return Competitive Analysis Result",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "55acd112-9c68-4c7e-9631-f7803b392614",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "d4d45fe6ce8c84f8055fdf8cee8b9f35899dc09f547385770f86d0df7ceeb129"
+  },
+  "nodeGroups": [],
+  "id": "tZi4yMRE1fwooqxz",
+  "tags": [
+    {
+      "updatedAt": "2026-07-13T14:38:45.889Z",
+      "createdAt": "2026-07-13T14:38:45.889Z",
+      "id": "XsKY5DuuIt3CqZKz",
+      "name": "final project"
+    }
+  ]
+}
